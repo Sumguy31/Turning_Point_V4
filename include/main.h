@@ -35,7 +35,8 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
-
+#include "motor.h"
+#include "object.hpp"
 /**
  * You should add more #includes here
  */
