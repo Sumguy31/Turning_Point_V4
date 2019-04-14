@@ -11,4 +11,14 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+    inAuto = true;
+    setBrakeBrake();
+    pros::Task autoCat(catapultAuto, NULL);
+    pros::Task LCDisplay(autoLCD, NULL);
+    //pros::lcd::print(3, "Motor Power: %d", iMovePid(inchesToDegrees(34)));
+    autoCatMode = 1;
+    movePID(36);
+    rotatePID(90);
+    pros::lcd::print(4,"completed");
+}

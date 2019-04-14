@@ -35,7 +35,7 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
-#include "motor.h"
+#include "sensor.hpp"
 #include "object.hpp"
 /**
  * You should add more #includes here
