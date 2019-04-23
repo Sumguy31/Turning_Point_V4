@@ -24,8 +24,8 @@ void opcontrol() {
 	while (true) {
 		
 		pros::lcd::print(0,"task state: %d",control_catapult.get_state() ); 
-		pros::lcd::print(1,"Pitch Value %f", pitch.get_value() );
-		pros::lcd::print(2,"Yaw Value %f", yaw.get_value() );
+		pros::lcd::print(1,"Yaw Value: %f", yaw.get_value() );
+		pros::lcd::print(2,"Pitch Value: %f", pitch.get_value() );
 		
 		if(master.get_digital(DIGITAL_A) ){
 			yaw.reset();

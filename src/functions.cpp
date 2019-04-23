@@ -69,7 +69,8 @@ void setBrakeCoast(){
 void autoLCD(void* x){
     while(true){
         pros::lcd::print(2,"yaw value: %f", yaw.get_value());
-        pros::delay(10);
+        pros::lcd::print(3,"Pitch value: %f", pitch.get_value());
+        pros::delay(20);
     }
 }
 
@@ -90,9 +91,9 @@ typedef struct {
 PID sMovePid;
 
 int iMovePid(int target){
-    sMovePid.kP = 0.2;
+    sMovePid.kP = 0.6;
     sMovePid.kI = 0;
-    sMovePid.kD = 0.7;
+    sMovePid.kD = 1;
 
     sMovePid.current = get_average_encoder();
     sMovePid.error = target - sMovePid.current;
@@ -107,14 +108,44 @@ int iMovePid(int target){
 void movePID(int distance){
     distance = inchesToDegrees(distance);
     int maxError = 10;
-    int maxPower = 70;
+    int maxPower = 80;
+    int minVelocity = 10;
+    int timer = 0;
+    bool exit = false;
 
     resetDriveEncoder();
-    while( abs(get_average_encoder() - distance) > maxError ){
-        int power = iMovePid(distance) < maxPower ? iMovePid(distance) : maxPower;
+    while( abs(get_average_encoder() - distance) > maxError && !exit){
+        int PIDPower = iMovePid(distance);
+        int power = abs(PIDPower) < maxPower ? PIDPower : maxPower*(PIDPower/ abs(PIDPower));
         set_left_drive(power);
         set_right_drive(power);
+        if(timer > 200 && abs(drive_left_1.get_actual_velocity()) < minVelocity){
+            exit = true;
+        }
         pros::delay(10);
+        timer +=10;
+    }
+    set_left_drive(0);
+    set_right_drive(0);
+}
+void movePID(int distance, int maxPower){
+    distance = inchesToDegrees(distance);
+    int maxError = 10;
+    int minVelocity = 10;
+    int timer = 0;
+    bool exit = false;
+
+    resetDriveEncoder();
+    while( abs(get_average_encoder() - distance) > maxError && !exit){
+        int PIDPower = iMovePid(distance);
+        int power = abs(PIDPower) < maxPower ? PIDPower : maxPower*(PIDPower/ abs(PIDPower));
+        set_left_drive(power);
+        set_right_drive(power);
+        if(timer > 200 && abs(drive_left_1.get_actual_velocity()) < minVelocity){
+            exit = true;
+        }
+        pros::delay(10);
+        timer +=10;
     }
     set_left_drive(0);
     set_right_drive(0);
@@ -124,8 +155,8 @@ PID sRotatePid;
 
 int iRotatePid(int target){
     sRotatePid.kP = 0.3;
-    sRotatePid.kI = 0;
-    sRotatePid.kD = 2;
+    sRotatePid.kI = 0.00001;
+    sRotatePid.kD = 2.5;
 
     sRotatePid.current = yaw.get_value();
     sRotatePid.error = target - sRotatePid.current;
@@ -139,15 +170,51 @@ int iRotatePid(int target){
 
 void rotatePID(int angle){
     angle = degreesToTicks(angle);
-    int maxError = 20;
-    int maxPower = 50;
+    int maxError = 50;
+    int maxPower = 60;
+    int timer = 0;
+    int minVelocity = 10;
+    bool exit = false;
 
     while( abs(yaw.get_value() - angle) > maxError ){
-        int power = iRotatePid(angle) < maxPower ? iRotatePid(angle) : maxPower*(iRotatePid(angle)/abs(iRotatePid(angle)));
-        set_left_drive( power);
-        set_right_drive( -power);
+        int PIDPower = iRotatePid(angle);
+        int power = abs(PIDPower) < maxPower ? PIDPower : maxPower*(PIDPower/ abs(PIDPower));
+        set_left_drive(power);
+        set_right_drive(-power);
+        pros::lcd::print(3,"Motor Power: %d", power);
+        pros::lcd::print(4, "Difference: %d", abs(yaw.get_value() - angle));
+        if(timer > 200 && abs(drive_left_1.get_actual_velocity()) < minVelocity){
+            exit = true;
+        }
         pros::delay(10);
+        timer += 10;
     }
+    set_left_drive(0);
+    set_right_drive(0);
+}
+
+void rotatePID(int angle, int maxPower){
+    angle = degreesToTicks(angle);
+    int maxError = 50;
+    int timer = 0;
+    int minVelocity = 10;
+    bool exit = false;
+
+    while( abs(yaw.get_value() - angle) > maxError ){
+        int PIDPower = iRotatePid(angle);
+        int power = abs(PIDPower) < maxPower ? PIDPower : maxPower*(PIDPower/ abs(PIDPower));
+        set_left_drive(power);
+        set_right_drive(-power);
+        pros::lcd::print(3,"Motor Power: %d", power);
+        pros::lcd::print(4, "Difference: %d", abs(yaw.get_value() - angle));
+        if(timer > 200 && abs(drive_left_1.get_actual_velocity()) < minVelocity){
+            exit = true;
+        }
+        pros::delay(10);
+        timer += 10;
+    }
+    set_left_drive(0);
+    set_right_drive(0);
 }
 
 void catapultAuto(void* x){
@@ -169,4 +236,45 @@ void catapultAuto(void* x){
         }
         pros::delay(10);
     }
+}
+
+void intakeAuto(void *z){
+    while(inAuto){
+        if(intake_mode = 1){
+            intake.move_velocity(-500);        
+            //in
+        }
+        else if(intake_mode = -1){
+            intake.move_velocity(500);
+            //out
+        }
+        else{
+            intake.move_velocity(0);
+        }
+        pros::delay(10);
+    }
+}
+
+void climbPlatform(){
+    int highPitch = 120;
+    int lowPitch = 40;
+    int power1 = 120;
+    int power2 = 90;
+    setBrakeBrake();
+    pros::lcd::print(5, "High Pitch Value: %d", highPitch);
+    pros::lcd::print(6, "Low Pitch Value: %d", lowPitch);
+
+    while(abs(pitch.get_value()) < highPitch){
+        set_right_drive(power1);
+        set_left_drive(power1);
+        pros::delay(5);
+    }
+    while(abs(pitch.get_value()) > lowPitch){
+        set_right_drive(power2);
+        set_left_drive(power2);
+        pros::delay(5);
+    }
+    set_right_drive(0);
+    set_left_drive(0);
+
 }

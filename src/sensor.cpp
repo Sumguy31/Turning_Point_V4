@@ -10,7 +10,7 @@ int i_encoder_port = 20;
 float angle[4] = {
     0, //bottom
     224,//flat
-    330, // up 45 deg
+    475, // up 45 deg
     858 //scored
 };
 
@@ -97,27 +97,35 @@ void arcade_control(void *X){
         pros::delay(10);
     }
 }
-void armCatapult(){
-    catapult.move_voltage(127);
+void armCatapult(){    
     while(!catapult_limit.get_value()){
+        catapult.move(d_max_volt);
+        pros::lcd::set_text(4, "arming Catapult");
         pros::delay(10);
     }
-    catapult.move_voltage(0);
+    pros::lcd::set_text(4, "finished Catapult");
+    catapult.move(0);
 }
 
-void fireCatapult(){
+void fireCatapult(){    
+    for(int i = 0; i<=40; i++){
+        catapult.move_velocity(75);
+        pros::delay(10);
+    }
+    catapult.move(0);
 }
 
 void catapult_control(void *y){
+    armCatapult();
     while(true){
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-            catapult.move(d_max_volt);
+            fireCatapult();
+            armCatapult();
         }
-        else if(!catapult_limit.get_value()){
-            catapult.move(d_max_volt);
+        else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+            armCatapult();
         }
         else{
-            catapult.move(0);
         }
         pros::delay(10);
     }
@@ -199,7 +207,7 @@ void arm_bar_control(void *w){
             }else if( master.get_digital(DIGITAL_DOWN) ){
                 set_arm_angle(0);
             }else if( master.get_digital(DIGITAL_RIGHT) ){
-                set_arm_angle(3);
+                set_arm_angle(2,50);
             }else{
                 set_arm_bar(0);
             }

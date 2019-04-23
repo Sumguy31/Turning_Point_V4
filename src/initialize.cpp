@@ -17,8 +17,10 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	yaw.reset();
+	pitch.reset();
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello Michael!");
+	pros::delay(1000);
 }
 
 /**

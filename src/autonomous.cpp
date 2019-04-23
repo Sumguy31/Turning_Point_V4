@@ -11,14 +11,137 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+void redFront(){
+    armCatapult();
+    intake_mode = 1;
+    movePID(-12);
+    movePID(45);
+    movePID(-52);
+    movePID(5);
+    rotatePID(-90);
+
+    movePID(-6);
+    fireCatapult();
+    armCatapult();
+    movePID(12);
+    rotatePID(-35);
+    movePID(17.75,50);
+    pros::delay(500);
+    movePID(-6);
+    pros::delay(250);
+    movePID(-2);
+    pros::delay(1000);
+    fireCatapult();
+}
+
+void blueFront(){
+    armCatapult();
+    intake_mode = 1;
+    movePID(-12);
+    movePID(45);//to cap
+    movePID(-52);
+    movePID(5);
+    rotatePID(90);//back up to align
+    movePID(-6);
+    fireCatapult();
+    intake_mode = 1;
+    armCatapult();
+    movePID(7.8);//to cap
+    rotatePID(35);
+    movePID(17.75, 50);
+    pros::delay(500);
+    movePID(-6);
+    pros::delay(250);
+    movePID(-2);
+    pros::delay(1000);
+    fireCatapult();
+}
+
+void redBack(){
+    arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    armCatapult();
+    intake_mode = 1;
+    movePID(-12);
+    movePID(45);
+    movePID(-52);
+    movePID(6);
+    rotatePID(-98);
+    fireCatapult();
+    armCatapult();
+
+    movePID(-30);
+    reset_arm_encoder();
+    movePID(3);
+    rotatePID(-185);
+    movePID(-24);
+    movePID(-5, 50);
+    pros::delay(200);
+    set_arm_angle(2, 50);
+    set_arm_bar(0);
+    pros::delay(200);
+    movePID(13,50);
+    rotatePID(-285);
+    movePID(5);
+    set_arm_angle(3);
+    set_arm_bar(0);
+
+    movePID(-24);
+    rotatePID(-225);
+    movePID(-12,80);
+    rotatePID(-270);
+    climbPlatform();
+}
+
+void blueBack(){
+    arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    armCatapult();
+    intake_mode = 1;
+    movePID(-12);
+    movePID(45);
+    movePID(-52);
+    movePID(6);
+    rotatePID(98);
+    fireCatapult();
+    armCatapult();
+
+    movePID(-30);
+    reset_arm_encoder();
+    movePID(3);
+    rotatePID(180);
+    movePID(-24);
+    movePID(-5, 50);
+    pros::delay(200);
+    set_arm_angle(2, 50);
+    set_arm_bar(0);
+    pros::delay(200);
+    movePID(16,50);
+    rotatePID(270);
+    movePID(5);
+    set_arm_angle(3);
+    set_arm_bar(0);
+
+    movePID(-12);
+    rotatePID(40);
+    movePID(16,80);
+    rotatePID(90);
+    climbPlatform();
+}
+
 void autonomous() {
     inAuto = true;
+    //yaw.reset();
+    //pitch.reset();
     setBrakeBrake();
-    pros::Task autoCat(catapultAuto, NULL);
+    pros::Task autoIntake(intakeAuto, NULL);
     pros::Task LCDisplay(autoLCD, NULL);
-    //pros::lcd::print(3, "Motor Power: %d", iMovePid(inchesToDegrees(34)));
-    autoCatMode = 1;
-    movePID(36);
-    rotatePID(90);
+    //pros::delay(2000);
+    //redFront();
+    //blueFront();
+    blueBack();
+    //redBack();
+    //climbPlatform();
+    //rotatePID(-370);
     pros::lcd::print(4,"completed");
 }

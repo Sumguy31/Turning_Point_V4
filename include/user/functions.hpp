@@ -1,6 +1,7 @@
 #ifndef _FUNCTIONS_HPP_
 #define _FUNCTIONS_HPP_
 
+extern int intake_mode;
 
 
 //Functions
@@ -18,6 +19,9 @@ void setBrakeBrake();
 void setBrakeHold();
 void setBrakeCoast();
 
+void reset_arm_encoder();
+
+void set_arm_bar(int volt);
 void set_arm_angle(int position, int power);
 void set_arm_angle(int position);
 
@@ -29,11 +33,17 @@ void intake_control(void *z);
 void arm_bar_control(void *W);
 
 void catapultAuto(void *y);
+void intakeAuto(void *z);
 
+void armCatapult();
+void fireCatapult();
 
 void movePID(int distance);
-int iMovePid(int target);
+void movePID(int distance, int maxPower);
+void rotatePID(int target);
 
 void rotatePID(int angle);
+
+void climbPlatform();
 
 #endif
