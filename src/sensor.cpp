@@ -1,7 +1,7 @@
 #include "main.h"
 
 //Global Variables
-int intake_mode = 0;// 0 is off || 1 is on || -1 is reverse
+int intake_mode;// 0 is off || 1 is on || -1 is reverse
 bool fire_catapult = false;
 double slow_mode = 0.75;
 double d_max_volt = 127;

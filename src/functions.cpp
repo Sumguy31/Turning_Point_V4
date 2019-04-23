@@ -2,7 +2,6 @@
 
 
 int climb = 175; //182 measured
-bool inAuto = false;
 int autoCatMode = 0;// 0 is hold, 1 is arm, 2 is fire
 
 int get_right_encoder(){
@@ -67,9 +66,10 @@ void setBrakeCoast(){
 }
 
 void autoLCD(void* x){
-    while(true){
+    while(pros::competition::is_autonomous()){
         pros::lcd::print(2,"yaw value: %f", yaw.get_value());
         pros::lcd::print(3,"Pitch value: %f", pitch.get_value());
+        pros::lcd::print(5, "Intake Mode: %d", intake_mode);
         pros::delay(20);
     }
 }
@@ -181,8 +181,6 @@ void rotatePID(int angle){
         int power = abs(PIDPower) < maxPower ? PIDPower : maxPower*(PIDPower/ abs(PIDPower));
         set_left_drive(power);
         set_right_drive(-power);
-        pros::lcd::print(3,"Motor Power: %d", power);
-        pros::lcd::print(4, "Difference: %d", abs(yaw.get_value() - angle));
         if(timer > 200 && abs(drive_left_1.get_actual_velocity()) < minVelocity){
             exit = true;
         }
@@ -205,8 +203,6 @@ void rotatePID(int angle, int maxPower){
         int power = abs(PIDPower) < maxPower ? PIDPower : maxPower*(PIDPower/ abs(PIDPower));
         set_left_drive(power);
         set_right_drive(-power);
-        pros::lcd::print(3,"Motor Power: %d", power);
-        pros::lcd::print(4, "Difference: %d", abs(yaw.get_value() - angle));
         if(timer > 200 && abs(drive_left_1.get_actual_velocity()) < minVelocity){
             exit = true;
         }
@@ -218,7 +214,7 @@ void rotatePID(int angle, int maxPower){
 }
 
 void catapultAuto(void* x){
-    while(inAuto){
+    while(pros::competition::is_autonomous()){
         if(autoCatMode == 1){
             while(catapult_limit.get_value() == false){
                 catapult.move_voltage(127);
@@ -239,12 +235,12 @@ void catapultAuto(void* x){
 }
 
 void intakeAuto(void *z){
-    while(inAuto){
-        if(intake_mode = 1){
+    while(pros::competition::is_autonomous()){
+        if(intake_mode == 1){
             intake.move_velocity(-500);        
             //in
         }
-        else if(intake_mode = -1){
+        else if(intake_mode == -1){
             intake.move_velocity(500);
             //out
         }
@@ -261,8 +257,6 @@ void climbPlatform(){
     int power1 = 120;
     int power2 = 90;
     setBrakeBrake();
-    pros::lcd::print(5, "High Pitch Value: %d", highPitch);
-    pros::lcd::print(6, "Low Pitch Value: %d", lowPitch);
 
     while(abs(pitch.get_value()) < highPitch){
         set_right_drive(power1);

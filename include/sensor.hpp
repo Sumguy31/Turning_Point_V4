@@ -6,7 +6,6 @@ extern bool fire_catapult;
 extern double slow_mode;
 extern double d_max_volt;
 extern int i_encoder_port;
-extern bool inAuto;
 extern int autoCatMode;
 
 //motor predeclarations

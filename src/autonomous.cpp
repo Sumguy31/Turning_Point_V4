@@ -130,18 +130,16 @@ void blueBack(){
 }
 
 void autonomous() {
-    inAuto = true;
     //yaw.reset();
     //pitch.reset();
     setBrakeBrake();
     pros::Task autoIntake(intakeAuto, NULL);
     pros::Task LCDisplay(autoLCD, NULL);
-    //pros::delay(2000);
     //redFront();
     //blueFront();
-    blueBack();
+    //blueBack();
     //redBack();
     //climbPlatform();
     //rotatePID(-370);
-    pros::lcd::print(4,"completed");
+    pros::lcd::print(7,"completed");
 }
