@@ -31,6 +31,7 @@ void arcade_control(void *x);
 void catapult_control(void *y);
 void intake_control(void *z);
 void arm_bar_control(void *W);
+void brake_control(void *x);
 
 void catapultAuto(void *y);
 void intakeAuto(void *z);

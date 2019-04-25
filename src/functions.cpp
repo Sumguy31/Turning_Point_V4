@@ -75,7 +75,6 @@ void autoLCD(void* x){
 }
 
 
-
 typedef struct {
     float current;
 	float kP;

@@ -20,10 +20,10 @@ void opcontrol() {
 	pros::Task control_arcade(arcade_control, NULL);
 	pros::Task control_intake(intake_control, NULL);
 	pros::Task control_armbar(arm_bar_control, NULL);
+	pros::Task control_brake(brake_control, NULL);
 
 	while (true) {
-		
-		pros::lcd::print(0,"task state: %d",control_catapult.get_state() ); 
+		pros::lcd::clear();
 		pros::lcd::print(1,"Yaw Value: %f", yaw.get_value() );
 		pros::lcd::print(2,"Pitch Value: %f", pitch.get_value() );
 		

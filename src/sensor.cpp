@@ -33,8 +33,8 @@ pros::Motor drive_left_2(4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODE
 
 //Sensor
 pros::ADIDigitalIn catapult_limit('h');
-pros::ADIGyro yaw('e', 1);
-pros::ADIGyro pitch('f', 1);
+pros::ADIGyro yaw('f', 1);
+pros::ADIGyro pitch('e', 1);
 
 
 int get_arm_position(){
@@ -207,10 +207,28 @@ void arm_bar_control(void *w){
             }else if( master.get_digital(DIGITAL_DOWN) ){
                 set_arm_angle(0);
             }else if( master.get_digital(DIGITAL_RIGHT) ){
-                set_arm_angle(2,50);
+                set_arm_angle(3);
             }else{
                 set_arm_bar(0);
             }
+        }
+        pros::delay(10);
+    }
+}
+
+void brake_control(void *x){
+    bool brake = false;
+    while(true){
+        if(master.get_digital(DIGITAL_B) ){
+            if(brake){
+                setBrakeCoast();
+                brake = false;
+            }else{
+                setBrakeBrake();
+                brake = true;
+            }
+        }else{
+            pros::delay(10);
         }
         pros::delay(10);
     }

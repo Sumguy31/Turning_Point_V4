@@ -18,18 +18,17 @@ void redFront(){
     movePID(45);
     movePID(-52);
     movePID(5);
-    rotatePID(-90);
+    rotatePID(-95);
 
     movePID(-6);
+    pros::delay(500);
     fireCatapult();
     armCatapult();
-    movePID(12);
-    rotatePID(-35);
-    movePID(17.75,50);
-    pros::delay(500);
-    movePID(-6);
+    movePID(13.5);
+    rotatePID(-40);
+    movePID(16.25,40);
     pros::delay(250);
-    movePID(-2);
+    movePID(-4);
     pros::delay(1000);
     fireCatapult();
 }
@@ -38,21 +37,20 @@ void blueFront(){
     armCatapult();
     intake_mode = 1;
     movePID(-12);
-    movePID(45);//to cap
+    movePID(48);//to cap
     movePID(-52);
     movePID(5);
     rotatePID(90);//back up to align
     movePID(-6);
+    pros::delay(500);
     fireCatapult();
-    intake_mode = 1;
+    pros::delay(100);
     armCatapult();
-    movePID(7.8);//to cap
+    movePID(9);//to cap
     rotatePID(35);
-    movePID(17.75, 50);
+    movePID(15.75, 40);
     pros::delay(500);
     movePID(-6);
-    pros::delay(250);
-    movePID(-2);
     pros::delay(1000);
     fireCatapult();
 }
@@ -102,23 +100,24 @@ void blueBack(){
     movePID(45);
     movePID(-52);
     movePID(6);
-    rotatePID(98);
+    rotatePID(92);
     fireCatapult();
     armCatapult();
 
-    movePID(-30);
+    movePID(-36);
     reset_arm_encoder();
     movePID(3);
-    rotatePID(180);
-    movePID(-24);
+    rotatePID(183);
+    movePID(-28);
     movePID(-5, 50);
     pros::delay(200);
     set_arm_angle(2, 50);
     set_arm_bar(0);
     pros::delay(200);
-    movePID(16,50);
+    rotatePID(160);
+    movePID(25,50);
     rotatePID(270);
-    movePID(5);
+    movePID(7);
     set_arm_angle(3);
     set_arm_bar(0);
 
@@ -135,7 +134,8 @@ void autonomous() {
     setBrakeBrake();
     pros::Task autoIntake(intakeAuto, NULL);
     pros::Task LCDisplay(autoLCD, NULL);
-    //redFront();
+    //pros::Task autoCatapult(catapultAuto, NULL);
+    redFront();
     //blueFront();
     //blueBack();
     //redBack();
