@@ -2,6 +2,7 @@
 #define _FUNCTIONS_HPP_
 
 extern int intake_mode;
+extern int autonNumber;
 
 
 //Functions
@@ -38,10 +39,12 @@ void intakeAuto(void *z);
 
 void armCatapult();
 void fireCatapult();
+void square();
 
 void movePID(int distance);
 void movePID(int distance, int maxPower);
 void rotatePID(int target);
+void rotatePID(int target, int maxPower);
 
 void rotatePID(int angle);
 

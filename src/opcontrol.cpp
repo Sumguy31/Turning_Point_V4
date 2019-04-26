@@ -14,18 +14,22 @@
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+
 	pros::Task control_catapult(catapult_control, NULL);
 	pros::Task control_arcade(arcade_control, NULL);
 	pros::Task control_intake(intake_control, NULL);
 	pros::Task control_armbar(arm_bar_control, NULL);
 	pros::Task control_brake(brake_control, NULL);
-
+	arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	
+	/*if(!pros::lcd::is_initialized()){
+        pros::lcd::initialize();
+    }*/
 	while (true) {
-		pros::lcd::clear();
-		pros::lcd::print(1,"Yaw Value: %f", yaw.get_value() );
-		pros::lcd::print(2,"Pitch Value: %f", pitch.get_value() );
+		
+		//pros::lcd::print(1,"Yaw Value: %f", yaw.get_value() );
+		//pros::lcd::print(2,"Pitch Value: %f", pitch.get_value() );
 		
 		if(master.get_digital(DIGITAL_A) ){
 			yaw.reset();

@@ -66,6 +66,10 @@ void setBrakeCoast(){
 }
 
 void autoLCD(void* x){
+    if(!pros::lcd::is_initialized()){
+        pros::lcd::initialize();
+    }
+    pros::lcd::clear();
     while(pros::competition::is_autonomous()){
         pros::lcd::print(2,"yaw value: %f", yaw.get_value());
         pros::lcd::print(3,"Pitch value: %f", pitch.get_value());
@@ -154,7 +158,7 @@ PID sRotatePid;
 
 int iRotatePid(int target){
     sRotatePid.kP = 0.3;
-    sRotatePid.kI = 0.00001;
+    sRotatePid.kI = 0.0003;
     sRotatePid.kD = 2.5;
 
     sRotatePid.current = yaw.get_value();
@@ -194,7 +198,7 @@ void rotatePID(int angle, int maxPower){
     angle = degreesToTicks(angle);
     int maxError = 50;
     int timer = 0;
-    int minVelocity = 10;
+    int minVelocity = 30;
     bool exit = false;
 
     while( abs(yaw.get_value() - angle) > maxError ){
@@ -270,4 +274,16 @@ void climbPlatform(){
     set_right_drive(0);
     set_left_drive(0);
 
+}
+
+void square(){
+    int minVelocity = 2;
+    set_left_drive(-60);
+    set_right_drive(-60);
+    pros::delay(200);
+    while(abs(drive_left_2.get_actual_velocity()) > minVelocity || abs(drive_right_2.get_actual_velocity()) > minVelocity){
+        pros::delay(10);
+    }
+    set_left_drive(0);
+    set_right_drive(0);
 }

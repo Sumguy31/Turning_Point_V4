@@ -3,6 +3,8 @@
 #include "main.h"
 
 extern bool fire_catapult;
+extern bool debugMode;
+extern int autonNumber;
 extern double slow_mode;
 extern double d_max_volt;
 extern int i_encoder_port;

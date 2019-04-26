@@ -3,6 +3,7 @@
 //Global Variables
 int intake_mode;// 0 is off || 1 is on || -1 is reverse
 bool fire_catapult = false;
+bool debugMode = false;
 double slow_mode = 0.75;
 double d_max_volt = 127;
 int i_encoder_port = 20;
@@ -35,6 +36,7 @@ pros::Motor drive_left_2(4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODE
 pros::ADIDigitalIn catapult_limit('h');
 pros::ADIGyro yaw('f', 1);
 pros::ADIGyro pitch('e', 1);
+pros::ADIPotentiometer selection_pot('d');
 
 
 int get_arm_position(){
@@ -76,8 +78,6 @@ void set_arm_bar(int volt){
 void arcade_control(void *X){
     while(true){
         int deadzone = 20;
-        int slowzone = 30;
-
         int left = master.get_analog(ANALOG_RIGHT_Y) + master.get_analog(ANALOG_RIGHT_X);
         int right = master.get_analog(ANALOG_RIGHT_Y) - master.get_analog(ANALOG_RIGHT_X);
 
@@ -85,31 +85,27 @@ void arcade_control(void *X){
         int right_power = abs(right) > deadzone ? right : 0;
         float power_adjust = 0.985;
 
-        if(master.get_digital(DIGITAL_UP)){
-            //turbo mode
             set_left_drive(left_power );
             set_right_drive(right_power);
-        }else{
-            //normal mode
-            set_right_drive(right_power * slow_mode);
-            set_left_drive(left_power * slow_mode);
-        }
+        
         pros::delay(10);
     }
 }
 void armCatapult(){    
     while(!catapult_limit.get_value()){
         catapult.move(d_max_volt);
-        pros::lcd::set_text(4, "arming Catapult");
+        //pros::lcd::set_text(4, "arming Catapult");
         pros::delay(10);
     }
-    pros::lcd::set_text(4, "finished Catapult");
+    //pros::lcd::set_text(4, "finished Catapult");
     catapult.move(0);
 }
 
 void fireCatapult(){    
-    for(int i = 0; i<=40; i++){
-        catapult.move_velocity(75);
+    int timer = 0;
+    catapult.move_velocity(75);
+    while( catapult_limit.get_value() || timer < 500){
+        timer += 10;
         pros::delay(10);
     }
     catapult.move(0);
