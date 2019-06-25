@@ -113,7 +113,7 @@ void chooseAuton(){
   style_ded.body.border.color = LV_COLOR_BLACK;
   style_ded.body.shadow.color = LV_COLOR_BLACK;
   style_ded.body.shadow.width = 0;
-        /*Copy a built-in style as a starting point*/
+        //Copy a built-in style as a starting point
 
   lv_btn_set_style(btn3, LV_BTN_STYLE_REL, &style_pr);
   lv_btn_set_style(btn4, LV_BTN_STYLE_REL, &style_pr);

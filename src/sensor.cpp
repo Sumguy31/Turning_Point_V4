@@ -223,6 +223,9 @@ void brake_control(void *x){
                 setBrakeBrake();
                 brake = true;
             }
+            while(master.get_digital(DIGITAL_B)){
+                pros::delay(10);
+            }
         }else{
             pros::delay(10);
         }

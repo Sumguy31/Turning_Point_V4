@@ -11,31 +11,58 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+
+int iAutoTimer;
 void redFront(){
-    armCatapult();
+    //armCatapult();
+    autoCatMode = 1;
     intake_mode = 1;
+    pros::delay(300);
     movePID(-8);
     square();
     movePID(43);
     movePID(-43);
     square();
-    movePID(2);
-    rotatePID(-95);
+    movePID(3);
+    rotatePID(-87);
 
     movePID(-6);
-    pros::delay(500);
-    fireCatapult();
-    armCatapult();
+    pros::delay(700);
+    //fireCatapult();
+    //armCatapult();
+    autoCatMode = 2;
+    pros::delay(600);
     rotatePID(-100);
     intake_mode= 1;
     movePID(70);
-    movePID(-24);
+    movePID(-22);
     rotatePID(0);
     intake_mode = -1;
     square();
     movePID(24);
-    rotatePID(-33);
-    fireCatapult();
+    //rotatePID(-22);
+    movePID(-24);
+    square();
+    rotatePID(-90);
+    movePID(-46);
+    rotatePID(0);
+    square();
+    //climbPlatform();
+                while(inchesToDegrees(45) > get_average_encoder()){
+                set_right_drive(100);
+                set_left_drive(100);
+            }
+    set_left_drive(0);
+    set_right_drive(0);
+    /*pros::delay(300);
+    movePID(8,40);
+    movePID(-4.5);
+    rotatePID(-49);  */
+    while(iAutoTimer < 14200){
+        pros::delay(5);
+    }
+    autoCatMode = 2;
+    //fireCatapult();
     /*Scrape and score
     movePID(13.5);
     rotatePID(-40);
@@ -47,30 +74,39 @@ void redFront(){
 }
 
 void blueFront(){
-    armCatapult();
+    //armCatapult();
+    autoCatMode = 1;
     intake_mode = 1;
+    pros::delay(300);
     movePID(-8);
     square();
     movePID(43);//to cap
     movePID(-43);
     square();
     movePID(3);
-    rotatePID(91);//back up to align
+    rotatePID(88);//back up to align
     movePID(-6);
-    pros::delay(500);
-    fireCatapult();
-    armCatapult();
+    pros::delay(300);
+    //fireCatapult();
+    //armCatapult();
+    autoCatMode = 2;
+    pros::delay(300);
     //flag and tag
     rotatePID(95);
+    intake_mode = 1;
     movePID(70);
     movePID(-24);
     rotatePID(0);
     intake_mode = -1;
     square();
     movePID(24);
-    rotatePID(23);
-    fireCatapult();
-
+    rotatePID(16.5);
+    //fireCatapult();
+    while(iAutoTimer < 14200){
+        pros::delay(5);
+    }
+    autoCatMode = 2;
+    pros::delay(400);
 
     /* //Scrape and score
     movePID(9);//to cap
@@ -84,89 +120,66 @@ void blueFront(){
 }
 
 void redBack(){
-    arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    armCatapult();
+    autoCatMode = 1;
     intake_mode = 1;
-    movePID(-12);
-    movePID(45);
-    movePID(-45);
+    pros::delay(300);
+    movePID(-8);
     square();
-    movePID(3);
-    rotatePID(-98);
-    fireCatapult();
-    armCatapult();
-
-    movePID(-20);
+    movePID(43);   
+    movePID(-43);
     square();
-    reset_arm_encoder();
-    movePID(4);
-    rotatePID(-175);
-    movePID(-24);
-    movePID(-5, 40);
-    set_arm_bar(-20);
-    pros::delay(200);
-    set_arm_angle(2, 50);
-    set_arm_bar(0);
-    pros::delay(200);
-    movePID(13,50);
-    rotatePID(-285);
-    movePID(5);
-    set_arm_angle(3);
-    set_arm_bar(0);
-
-    movePID(-24);
-    rotatePID(-225);
-    movePID(-12,80);
-    rotatePID(-270);
-    //climbPlatform();
+    rotatePID(-95);
+    movePID(25.5);
+    rotatePID(0);
+    intake_mode = 0;
+    square();
+    climbPlatform();
+    movePID(2);
+    pros::delay(1000);
+    movePID(8,40);
+    movePID(-4.5);
+    rotatePID(-49);     
+    /*movePID(-9);
+    pros::delay(500);
+    rotatePID(-95);
+    climbPlatform();
+    pros::delay(300);
+    movePID(3.5);
+    rotatePID(-48);
+    movePID(2);*/
+    while(iAutoTimer < 14200){
+        pros::delay(5);
+    }
+    autoCatMode = 2;
 }
 
 void blueBack(){
-    arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    armCatapult();
     intake_mode = 1;
+    //armCatapult();
+    autoCatMode = 1;
+    pros::delay(300);
     movePID(-8);
     square();
-    movePID(45);
-    movePID(-45);
-    square();
-    movePID(6);
-    rotatePID(92);
-    fireCatapult();
-    armCatapult();
-
-    movePID(-20);
-    square();
-    reset_arm_encoder();
-    movePID(4);
-    rotatePID(178);
-    movePID(-26,60);
-    set_arm_bar(-20);
-    movePID(-10, 40);
-    pros::delay(200);
-    set_arm_angle(2, 50);
-    set_arm_bar(0);
-    pros::delay(200);
-    rotatePID(150);
-    movePID(25,50);
-    rotatePID(270);
-    movePID(7);
-    set_arm_angle(3);
-    set_arm_bar(0);
-
-    movePID(-12);
-    rotatePID(40);
-    movePID(16,80);
+    movePID(43);
+    movePID(-10);
+    pros::delay(100);
     rotatePID(90);
-    //climbPlatform();
+    climbPlatform();
+    pros::delay(1000);
+    movePID(2);
+    rotatePID(45);
+    movePID(1);
+    while(iAutoTimer < 14200){
+        pros::delay(5);
+    }
+   autoCatMode = 2;
 }
 
 void flagTagBlue(){
     arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    armCatapult();
+    //armCatapult();
+    autoCatMode = 1;
     movePID(-36, 60);
     movePID(-5, 40);
     pros::delay(300);
@@ -187,19 +200,52 @@ void flagTagBlue(){
     rotatePID(-73);
     climbPlatform();
     rotatePID(-108);
-    fireCatapult();
+    while(iAutoTimer < 14200){
+        pros::delay(5);
+    }
+    autoCatMode = 2;
+    //fireCatapult();
+}
+
+void flagTagRed(){
+    arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    autoCatMode = 1;
+    movePID(-36, 60);
+    movePID(-5, 40);
+    pros::delay(300);
+    set_arm_angle(2,50);
+    set_arm_bar(0);
+    movePID(19.5);
+    rotatePID(-120);
+    movePID(17);
+    set_arm_angle(3);
+    set_arm_bar(0);
+    movePID(-8);
+    rotatePID(73);
+    climbPlatform();
+    rotatePID(108);
+    while(iAutoTimer < 14200){
+        pros::delay(5);
+    }
+    autoCatMode = 2;
 }
 void autonomous() {
     //yaw.reset();
     //pitch.reset();
     pros::Task autoIntake(intakeAuto, NULL);
-    pros::Task LCDisplay(autoLCD, NULL);
+    //pros::Task LCDisplay(autoLCD, NULL);
     setBrakeBrake();
+    pros::Task cataAuto(catapultAuto, NULL);
+    pros::Task timeAuto(autoTimer, NULL);
+    /*if(autonNumber == 2 || autonNumber == 4){
+        pros::Task cataTimer(fireLast, NULL);
+    }*/
     //pros::Task autoCatapult(catapultAuto, NULL);
     switch (autonNumber){
         case 0:
             //test function
-            
+
             break;
         
         case 1:
@@ -215,8 +261,9 @@ void autonomous() {
             break;
 
         case 4:
-            //blueBack();
-            flagTagBlue();
+            blueBack();
+            //flagTagBlue();
+
             break;
         default:
             break;

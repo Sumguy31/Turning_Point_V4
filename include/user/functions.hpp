@@ -3,6 +3,7 @@
 
 extern int intake_mode;
 extern int autonNumber;
+extern int iAutoTimer;
 
 
 //Functions
@@ -15,6 +16,7 @@ int inchesToDegrees(int inches);
 
 void set_right_drive(int volt);
 void set_left_drive(int volt);
+int get_average_encoder();
 
 void setBrakeBrake();
 void setBrakeHold();
@@ -36,6 +38,7 @@ void brake_control(void *x);
 
 void catapultAuto(void *y);
 void intakeAuto(void *z);
+void autoTimer(void *x);
 
 void armCatapult();
 void fireCatapult();

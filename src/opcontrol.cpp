@@ -22,7 +22,8 @@ void opcontrol() {
 	pros::Task control_brake(brake_control, NULL);
 	arm_left.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 	arm_right.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-	
+	setBrakeBrake();
+
 	/*if(!pros::lcd::is_initialized()){
         pros::lcd::initialize();
     }*/
@@ -32,8 +33,7 @@ void opcontrol() {
 		//pros::lcd::print(2,"Pitch Value: %f", pitch.get_value() );
 		
 		if(master.get_digital(DIGITAL_A) ){
-			yaw.reset();
-			pitch.reset();
+			rotatePID(90);
 		}
 
 		pros::delay(10);

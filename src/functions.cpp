@@ -157,9 +157,9 @@ void movePID(int distance, int maxPower){
 PID sRotatePid;
 
 int iRotatePid(int target){
-    sRotatePid.kP = 0.3;
-    sRotatePid.kI = 0.0003;
-    sRotatePid.kD = 2.5;
+    sRotatePid.kP = 0.6;
+    sRotatePid.kI = 0;
+    sRotatePid.kD = 4;
 
     sRotatePid.current = yaw.get_value();
     sRotatePid.error = target - sRotatePid.current;
@@ -173,23 +173,28 @@ int iRotatePid(int target){
 
 void rotatePID(int angle){
     angle = degreesToTicks(angle);
-    int maxError = 50;
-    int maxPower = 60;
+    int maxError = 20;
+    int maxPower = 80;
     int timer = 0;
-    int minVelocity = 10;
+    int minVelocity = 1;
     bool exit = false;
 
-    while( abs(yaw.get_value() - angle) > maxError ){
+    sRotatePid.integral = 0;
+
+    while( abs(yaw.get_value() - angle) > maxError && !exit){
         int PIDPower = iRotatePid(angle);
         int power = abs(PIDPower) < maxPower ? PIDPower : maxPower*(PIDPower/ abs(PIDPower));
         set_left_drive(power);
         set_right_drive(-power);
+
         if(timer > 200 && abs(drive_left_1.get_actual_velocity()) < minVelocity){
             exit = true;
         }
         pros::delay(10);
         timer += 10;
     }
+    pros::lcd::print(5, "Difference: %d", abs(yaw.get_value() - angle));
+    pros::lcd::print(6, "Target Angle %d", angle);
     set_left_drive(0);
     set_right_drive(0);
 }
@@ -219,17 +224,12 @@ void rotatePID(int angle, int maxPower){
 void catapultAuto(void* x){
     while(pros::competition::is_autonomous()){
         if(autoCatMode == 1){
-            while(catapult_limit.get_value() == false){
-                catapult.move_voltage(127);
-                pros::delay(10);
-            }
+            armCatapult();
             autoCatMode = 0;
         }
         else if(autoCatMode == 2){
-            while(catapult_limit.get_value() == true){
-                catapult.move_voltage(127);
-                pros::delay(10);
-            }
+            fireCatapult();
+            autoCatMode = 1;
         }else{
             catapult.move_voltage(0);
         }
@@ -256,7 +256,7 @@ void intakeAuto(void *z){
 
 void climbPlatform(){
     int highPitch = 120;
-    int lowPitch = 40;
+    int lowPitch = 50;
     int power1 = 120;
     int power2 = 90;
     setBrakeBrake();
@@ -266,7 +266,7 @@ void climbPlatform(){
         set_left_drive(power1);
         pros::delay(5);
     }
-    while(abs(pitch.get_value()) > lowPitch){
+    while(abs(pitch.get_value()) > lowPitch ){
         set_right_drive(power2);
         set_left_drive(power2);
         pros::delay(5);
@@ -278,12 +278,20 @@ void climbPlatform(){
 
 void square(){
     int minVelocity = 2;
-    set_left_drive(-60);
-    set_right_drive(-60);
-    pros::delay(200);
+    set_left_drive(-70);
+    set_right_drive(-70);
+    pros::delay(100);
     while(abs(drive_left_2.get_actual_velocity()) > minVelocity || abs(drive_right_2.get_actual_velocity()) > minVelocity){
         pros::delay(10);
     }
     set_left_drive(0);
     set_right_drive(0);
+}
+
+void autoTimer(void *x){
+    iAutoTimer = 0;
+    while( pros::competition::is_autonomous()){
+        pros::delay(10);
+        iAutoTimer += 10;
+    }
 }
